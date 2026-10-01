@@ -50,11 +50,11 @@ function cat(id){
   <div class="sib">${D.filter(x=>+x.id>=DEPTS[dep][2]&&+x.id<=DEPTS[dep][3]).map(x=>`<a href="#/cat/${x.id}" class="${x.id===id?'on':''}">${esc(x.n)}</a>`).join('')}</div>
   <div class="vs">${cardVs(a,a===lo&&d>0)}<div class="vs-mid"><span>VS</span></div>${cardVs(b,b===lo&&d>0)}</div>
   <div class="diff"><b>${d?Q(d):'Mismo precio'}</b><p>${d?`<strong>${esc(lo.n)}</strong> cuesta ${pct}% menos que <strong>${esc(hi.n)}</strong>.`:'Ambas opciones tienen el mismo precio.'}</p></div>
-  ${c.rec?`<div class="rec"><b>Recomendación:</b> ${esc(c.rec)}</div>`:''}
+  <section class="verdict"><h2>¿Cuál elegir?</h2><div class="vgrid">${[a,b].map(p=>{const o=p===a?b:a,dd=p.pr-o.pr;return `<div class="vcard ${p===lo&&d>0?'cheap':''}"><div class="vtop"><span class="vbadge">${esc(p.b||'Opción')}</span><b class="vprice">${Q(p.pr)}</b></div><h3>Elige ${esc(p.n)}</h3><p>Si ${esc(p.use)}.</p><small>${d===0?'Mismo precio que la otra opción':dd<0?`Cuesta ${Q(-dd)} menos que la otra opción`:`Cuesta ${Q(dd)} más que la otra opción`}.</small></div>`}).join('')}</div></section>
   <p class="note">Los precios y existencias pueden variar según la tienda.</p>
   <nav class="pn" aria-label="Navegación entre categorías">${k>0?`<a class="pn-b prev" href="#/cat/${D[k-1].id}"><i>←</i><span><small>Anterior</small><b>${esc(D[k-1].n)}</b></span></a>`:'<span></span>'}<a class="pn-mid" href="#/depto/${dep}" aria-label="Volver al departamento">⊞<span>${esc(DEPTS[dep][1])}</span></a>${k<D.length-1?`<a class="pn-b next" href="#/cat/${D[k+1].id}"><span><small>Siguiente</small><b>${esc(D[k+1].n)}</b></span><i>→</i></a>`:'<span></span>'}</nav>`;
 }
-function cardVs(p,win){return card(p,{win}).replace('<div class="sp">','<div class="why">'+esc(p.w)+'</div><div class="sp">')}
+function cardVs(p,win){return card(p,{win}).replace('<div class="sp">','<div class="why"><b>✓ Por qué es buena opción</b>'+esc(p.w)+'</div><div class="sp">')}
 function results(params,titleOverride,list){
   setNav('buscar');
   const q=params.get('q')||'',terms=norm(q).split(/\s+/).filter(Boolean);
@@ -86,7 +86,7 @@ function modal(k){const p=find(k);if(!p)return;const m=$('#modal');
   <div class="mbody"><span class="store">${esc(p.st)}</span><h2>${esc(p.n)}</h2><div class="cat">${esc(p.cn)}</div>
   <div class="price" style="font-size:1.8rem">${Q(p.pr)}</div>
   <ul class="spl">${p.sp.split('·').map(x=>`<li>${esc(x.trim())}</li>`).join('')}</ul>
-  <p class="why">${esc(p.w)}</p>
+  <p class="why"><b>✓ Por qué es buena opción</b>${esc(p.w)}</p><p class="why"><b>Ideal si…</b>${esc(p.use)}.</p>
   <p style="font-size:.84rem;color:var(--mut)">Frente a <b>${esc(other.n)}</b>: ${d===0?'mismo precio':d<0?`<span style="color:var(--good);font-weight:700">${Q(-d)} más barato</span>`:`${Q(d)} más caro`}.</p>
   <div class="acts"><a class="btn" href="${esc(p.u)}" target="_blank" rel="noopener noreferrer">${p.f?'Ver sección en':'Ver en'} ${esc(short(p.st))} ↗</a><a class="btn ghost" href="#/cat/${p.cid}" data-close>Ver comparación</a></div>
   <p class="note">${esc(p.av)||'Consultar existencias'} · Precio referencial.</p></div></div>`;
