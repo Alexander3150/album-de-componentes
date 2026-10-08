@@ -255,3 +255,21 @@ body.lock{overflow:hidden}
 .sib a{font-size:.74rem;font-weight:500;padding:5px 11px;background:#eef2fb;border-color:transparent;color:#64748b}
 .sib a:hover{background:#e3ebfb;border-color:transparent;color:var(--blue2)}
 .sib a.on{background:var(--blue2);color:#fff;font-weight:600}
+
+/* ===== v4: clics en portada y barras de desplazamiento ===== */
+.hero:after{pointer-events:none}
+.hero>*{position:relative;z-index:1}
+*{scrollbar-width:thin;scrollbar-color:#b9c9f2 transparent}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#b9c9f2;border-radius:99px;border:2px solid transparent;background-clip:content-box}
+::-webkit-scrollbar-thumb:hover{background:#2563eb;background-clip:content-box}
+::-webkit-scrollbar-button{display:none}
+::-webkit-scrollbar-corner{background:transparent}
+.dchips.scroll,.sib{scrollbar-width:thin;scrollbar-color:transparent transparent;scroll-snap-type:x proximity;-webkit-mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent)}
+.dchips.scroll:hover,.sib:hover{scrollbar-color:#b9c9f2 transparent}
+.dchips.scroll::-webkit-scrollbar,.sib::-webkit-scrollbar{display:block;height:4px}
+.dchips.scroll::-webkit-scrollbar-thumb,.sib::-webkit-scrollbar-thumb{background:transparent;border:0;background-clip:border-box}
+.dchips.scroll:hover::-webkit-scrollbar-thumb,.sib:hover::-webkit-scrollbar-thumb{background:#b9c9f2}
+.dchips.scroll>*,.sib>*{scroll-snap-align:start}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}.dchips.scroll,.sib{scroll-snap-type:none}}
