@@ -179,8 +179,15 @@ function modal(k){const p=find(k);if(!p)return;const m=$('#modal');
   m.hidden=false;document.body.style.overflow='hidden';m.querySelector('.mx').focus()}
 const closeM=()=>{$('#modal').hidden=true;document.body.style.overflow=''};
 /* ---------- Menú ---------- */
-function buildMega(){$('#megaBody').innerHTML=DEPTS.map((d,i)=>`<section class="mg"><a class="mg-h" href="#/depto/${i}"><span class="mg-ic">${d.ic}</span><b>${esc(d.n)}</b><em>${d.ids.length}</em></a><ul>${catsOf(i).map(c=>`<li><a href="#/cat/${c.id}">${esc(c.n)}${NEWIDS.has(c.id)?' <em class="newb">NUEVO</em>':''}</a></li>`).join('')}</ul></section>`).join('')}
-function toggleMega(f){const m=$('#mega');m.hidden=f!==undefined?!f:!m.hidden;$('#btnCats').setAttribute('aria-expanded',!m.hidden)}
+function buildMega(){const mb=$('#megaBody');
+  mb.innerHTML=`<div class="mg2">${DEPTS.map((d,i)=>`<section class="mg2-d${i===0?' on':''}"><button type="button" class="mg2-t" id="mgt${i}" aria-expanded="${i===0}" aria-controls="mgp${i}" data-d="${i}"><span class="mg-ic">${d.ic}</span><b>${esc(d.n)}</b><em>${catsOf(i).length}</em><i class="mg2-ar" aria-hidden="true">›</i></button><div class="mg2-p" id="mgp${i}" role="region" aria-labelledby="mgt${i}"><h3>${d.ic} ${esc(d.n)}</h3><ul>${catsOf(i).map(c=>`<li><a href="#/cat/${c.id}"><span>${esc(c.n)}</span>${NEWIDS.has(c.id)?'<em class="newb" title="Nuevo">Nuevo</em>':''}</a></li>`).join('')}</ul><a class="mg2-all" href="#/depto/${i}">Ver todo el departamento →</a></div></section>`).join('')}</div>`;
+  const mob=()=>matchMedia('(max-width:960px)').matches;
+  const act=(i,tg)=>mb.querySelectorAll('.mg2-d').forEach((s,k)=>{const on=k===i&&(!tg||!s.classList.contains('on'));s.classList.toggle('on',on);s.firstChild.setAttribute('aria-expanded',on)});
+  mb.addEventListener('click',e=>{const t=e.target.closest('.mg2-t');if(t)act(+t.dataset.d,mob())});
+  mb.addEventListener('mouseover',e=>{const t=e.target.closest('.mg2-t');if(t&&!mob())act(+t.dataset.d)});
+  mb.addEventListener('focusin',e=>{const t=e.target.closest('.mg2-t');if(t&&!mob())act(+t.dataset.d)});
+  mb.addEventListener('keydown',e=>{const t=e.target.closest('.mg2-t');if(!t||!['ArrowDown','ArrowUp'].includes(e.key))return;e.preventDefault();const b=[...mb.querySelectorAll('.mg2-t')],n=b[b.indexOf(t)+(e.key==='ArrowDown'?1:-1)];if(n)n.focus()})}
+function toggleMega(f){const m=$('#mega');m.hidden=f!==undefined?!f:!m.hidden;$('#btnCats').setAttribute('aria-expanded',!m.hidden);document.body.classList.toggle('mega-open',!m.hidden&&matchMedia('(max-width:960px)').matches)}
 /* ---------- Autocompletado ---------- */
 const sg=$('#sugg');let sgIdx=-1,sgItems=[];
 function showSugg(v){
